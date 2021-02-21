@@ -1,0 +1,26 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/JumpSelector.hdl
+
+/**
+ * JumpSelector Chip- checks whether one of the jump bits is 1, and if so checks the
+ * relevant condition using the zr and ng bits, outputted from the ALU.
+ * output is true if the selected condition bit is true, and false otherwise.
+ */
+
+CHIP JumpSelector {
+	IN j[3], zr, ng;
+
+	OUT pc_load;
+
+	PARTS:
+	And(a=j[0], b=ng, out=lt)
+	And(a=j[1], b=zr, out=eq)
+	Not(in=zr, out=notzr)
+	Not(in=ng, out=notng)
+	And(a=notzr, b=notng, out=andgt)
+	And(a=andgt, b=j[2], out=gt)
+	Or(a=gt, b=eq, out=gtoreq)
+	Or(a=gtoreq, b=lt, out=pc_load)
+}
